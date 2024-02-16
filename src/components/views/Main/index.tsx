@@ -4,10 +4,17 @@ import Sidebar from '../../layouts/Sidebar';
 import mainImg from '../../../assets/images/main-img.png';
 import AnimationParams from 'src/models/enums/AnimationParamsEnum';
 import { IElementAnimationParams } from 'src/models/IElementAnimationParams';
-import useInterval from 'src/components/hooks/useInterval';
+// import useInterval from 'src/components/hooks/useInterval';
 import Header from 'src/components/layouts/Header';
 
+/* eslint-disable */
 const Main = () => {
+    const [animatedElements, setAnimatedElements] = useState<{ params: IElementAnimationParams; id: string }[] | []>(() => {
+        if (JSON.parse(localStorage.getItem('animatedElementIds') as string)) {
+            return JSON.parse(localStorage.getItem('animatedElementIds') as string);;
+        } else return [];
+    });
+
     const [elementAnimationParams, setElementAnimationParams] = useState<IElementAnimationParams>(() => {
         if (JSON.parse(localStorage.getItem('animationParams') as string)) {
             return JSON.parse(localStorage.getItem('animationParams') as string);
@@ -47,8 +54,9 @@ const Main = () => {
     const [animatedElement, setAnimatedElement] = useState<any>(null);
 
     const saveAnimatedElement = (el: any) => {
-        console.log(el);
-        localStorage.setItem('animatedElementId', el.id as string);
+        if (animatedElements.findIndex(item => item.id === el.id) === -1) {
+            setAnimatedElements([...animatedElements, {params: elementAnimationParams, id: el.id}]);
+        }
     };
 
     const saveParams = () => {
@@ -149,21 +157,24 @@ const Main = () => {
         return true;
     };
 
-    const returnElementInitialPosition = () => {
-        if (!initialElement) return;
-        if (initialElement.style.display === 'none') initialElement.style.display = 'block';
-        initialElement.style.transition = `transform ${0 + 's'}, opacity ${0 + 's'}, filter ${0 + 's'}`;
-        initialElement.style.transform =
+    const returnElementInitialPosition = (el?: any) => {
+        if (!el) return;
+        if (el.style.display === 'none') el.style.display = 'block';
+        el.style.transition = `transform ${0 + 's'}, opacity ${0 + 's'}, filter ${0 + 's'}`;
+        el.style.transform =
             `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +
             ` scale(${initialElementAnimationParams.scale})`;
-        initialElement.style.opacity = initialElementAnimationParams.opacity + '%';
-        initialElement.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
+            el.style.opacity = initialElementAnimationParams.opacity + '%';
+            el.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
         if (animatedElement && animatedElement.style.display !== 'none') animatedElement.style.display = 'none';
     };
 
     const chooseElement = (el: any) => {
         if (!el) return;
-        if (initialElement && el !== initialElement) returnElementInitialPosition();
+        returnElementInitialPosition(el);
+        if (animatedElements.findIndex(item => item.id === el.id) !== -1) {
+            setElementAnimationParams(animatedElements[animatedElements.findIndex(item => item.id === el.id)].params);
+        }
         const wrapper =
             el !== initialElement || !checkWrapper(el.parentNode) ? createWrapperElements(el) : el.parentNode;
         const cloneElement =
@@ -178,59 +189,83 @@ const Main = () => {
         saveAnimatedElement(el);
     };
 
-    const startElementAnimation = () => {
-        initialElement.style.transition = `
-			transform ${elementAnimationParams.speed + 's'} ${elementAnimationParams.easing},
-			opacity ${elementAnimationParams.speed + 's'} ${elementAnimationParams.easing},
-			filter ${elementAnimationParams.speed + 's'} ${elementAnimationParams.easing}
+    const startElementAnimation = (el: any, params: any) => {
+        el.style.transition = `
+			transform ${params.speed + 's'} ${params.easing},
+			opacity ${params.speed + 's'} ${params.easing},
+			filter ${params.speed + 's'} ${params.easing}
 		`;
-        initialElement.style.transform =
-            `translate(${elementAnimationParams.x + 'px'}, ${elementAnimationParams.y + 'px'})` +
-            ` scale(${elementAnimationParams.scale})`;
-        initialElement.style.opacity = elementAnimationParams.opacity + '%';
-        initialElement.style.filter = `blur(${elementAnimationParams.blur + 'px'})`;
+        el.style.transform =
+            `translate(${params.x + 'px'}, ${params.y + 'px'})` +
+            ` scale(${params.scale})`;
+            el.style.opacity = params.opacity + '%';
+            el.style.filter = `blur(${params.blur + 'px'})`;
     };
 
-    const startAnimation = () => {
-        if (!elementAnimationParams.replay) {
-            // console.log('once');
-            returnElementInitialPosition();
+    const createReplayAnimate = (el: any, params: any) => {
+        const intervalAnim = setInterval(() => {
+            startElementAnimation(el, params);
+        }, params.delay * 1000);
+        const intervalReturnInitialPlace = setInterval(() => {
+            returnElementInitialPosition(el);
+        }, params.delay * 1000 - 100);
+    };
+
+    const startAnimation = (el: any, params: any) => {
+        if (!params.replay) {
+            returnElementInitialPosition(el);
             setTimeout(() => {
                 setTimeout(() => {
-                    startElementAnimation();
+                    startElementAnimation(el, params);
                 }, 100);
-            }, elementAnimationParams.delay * 1000);
+            }, params.delay * 1000);
+        } else {
+            if (!params.delay) return;
+            createReplayAnimate(el, params)
         }
     };
 
     const showPreview = () => {
         if (!initialElement) return;
-        startAnimation();
+        animatedElements.map(item => startAnimation(document.querySelector('#' + item.id), item.params));
     };
 
-    useInterval(
-        () => {
-            // console.log('interval');
-            if (!elementAnimationParams.delay) return;
-            startElementAnimation();
-            setTimeout(
-                () => {
-                    returnElementInitialPosition();
-                },
-                elementAnimationParams.delay * 1000 - 100,
-            );
-        },
-        elementAnimationParams.replay ? elementAnimationParams.delay * 1000 : null,
-    );
+    // useInterval(
+    //     () => {
+    //         // console.log('interval');
+    //         if (!elementAnimationParams.delay) return;
+    //         animatedElements.map(item => startElementAnimation(document.querySelector('#' + item.id), item.params));
+    //         setTimeout(
+    //             () => {
+    //                 returnElementInitialPosition();
+    //             },
+    //             elementAnimationParams.delay * 1000 - 100,
+    //         );
+    //     },
+    //     elementAnimationParams.replay ? elementAnimationParams.delay * 1000 : null,
+    // );
+
+    const saveElementParams = () => {
+        if (animatedElements.find(item => item.id === animatedElement.id)) {
+            const newAnimatedElements = animatedElements.map(item => {
+                if (item.id !== animatedElement.id) return item;
+                return {
+                    params: elementAnimationParams,
+                    id: item.id,
+                }
+            })
+            setAnimatedElements(newAnimatedElements);
+        }
+    }
 
     useEffect(() => {
         saveParams();
         if (!animatedElement) {
-            returnElementInitialPosition();
+            returnElementInitialPosition(initialElement);
             chooseElement(initialElement);
             return;
         }
-        returnElementInitialPosition();
+        animatedElements.map(item => returnElementInitialPosition(document.querySelector('#' + item.id)));
         if (animatedElement.style.display === 'none') animatedElement.style.display = 'block';
         animatedElement.style.transition = `transform ${0 + 's'}, opacity ${0 + 's'}, filter ${0 + 's'}`;
         animatedElement.style.transform =
@@ -238,7 +273,15 @@ const Main = () => {
             ` scale(${elementAnimationParams.scale})`;
         animatedElement.style.opacity = elementAnimationParams.opacity + '%';
         animatedElement.style.filter = `blur(${elementAnimationParams.blur + 'px'})`;
+        saveElementParams();
+
     }, [elementAnimationParams]);
+
+    useEffect(() => {
+        if (!animatedElements) return;
+        if (!animatedElements.length) return;
+        localStorage.setItem('animatedElementIds', JSON.stringify(animatedElements));
+    }, [animatedElements]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -292,7 +335,7 @@ const Main = () => {
                         />
                     </div>
                 </div>
-                <Sidebar changeParams={changeParams} animationParams={elementAnimationParams} />
+                <Sidebar changeParams={changeParams} animationParams={elementAnimationParams} elementId={initialElement ? initialElement.id : ''} />
             </section>
         </div>
     );
