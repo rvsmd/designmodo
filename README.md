@@ -6,7 +6,7 @@
     ```
 
 	```Shell
-    npm start
+    npm run start
     ```
 
 2.  Open [localhost:3000](http://localhost:3000) to see it in action.
