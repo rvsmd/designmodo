@@ -48,7 +48,7 @@ const Main = () => {
 
     const saveAnimatedElement = (el: any) => {
         console.log(el);
-        localStorage.setItem('animatedElementId', 'animatedBtn');
+        localStorage.setItem('animatedElementId', el.id as string);
     };
 
     const saveParams = () => {
@@ -149,17 +149,6 @@ const Main = () => {
         return true;
     };
 
-    const chooseElement = (el: any) => {
-        if (!el) return;
-        const wrapper =
-            el !== initialElement || !checkWrapper(el.parentNode) ? createWrapperElements(el) : el.parentNode;
-        const cloneElement = !animatedElement ? createCloneElement(el) : animatedElement;
-        wrapper.appendChild(cloneElement);
-        setInitialElement(el);
-        setAnimatedElement(cloneElement);
-        saveAnimatedElement(el);
-    };
-
     const returnElementInitialPosition = () => {
         if (!initialElement) return;
         if (initialElement.style.display === 'none') initialElement.style.display = 'block';
@@ -170,6 +159,23 @@ const Main = () => {
         initialElement.style.opacity = initialElementAnimationParams.opacity + '%';
         initialElement.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
         if (animatedElement && animatedElement.style.display !== 'none') animatedElement.style.display = 'none';
+    };
+
+    const chooseElement = (el: any) => {
+        if (!el) return;
+        if (initialElement && el !== initialElement) returnElementInitialPosition();
+        const wrapper =
+            el !== initialElement || !checkWrapper(el.parentNode) ? createWrapperElements(el) : el.parentNode;
+        const cloneElement =
+            el === initialElement
+                ? !animatedElement
+                    ? createCloneElement(el)
+                    : animatedElement
+                : createCloneElement(el);
+        wrapper.appendChild(cloneElement);
+        setInitialElement(el);
+        setAnimatedElement(cloneElement);
+        saveAnimatedElement(el);
     };
 
     const startElementAnimation = () => {
@@ -252,8 +258,14 @@ const Main = () => {
                                 marginRight: 30,
                             }}
                         >
-                            <h1>Animation Settings</h1>
-                            <h3 style={{ marginTop: 22.82 }}>
+                            <h1 id='user-animatedTitle' onClick={(e) => chooseElement(e.target)}>
+                                Animation Settings
+                            </h1>
+                            <h3
+                                id='user-animatedSubtitle'
+                                style={{ marginTop: 22.82 }}
+                                onClick={(e) => chooseElement(e.target)}
+                            >
                                 The user should have the option to select any <br />
                                 element on the page and set up its animation using <br />
                                 the controls in the right panel. A dotted line will <br />
@@ -265,13 +277,19 @@ const Main = () => {
                             <button
                                 className={styles['section-btn']}
                                 data-testId='animationButton'
-                                id='animatedBtn'
+                                id='user-animatedBtn'
                                 onClick={(e) => chooseElement(e.target)}
                             >
                                 Button
                             </button>
                         </div>
-                        <img src={mainImg} width={300} height={300} />
+                        <img
+                            src={mainImg}
+                            width={300}
+                            height={300}
+                            id='user-animatedImg'
+                            onClick={(e) => chooseElement(e.target)}
+                        />
                     </div>
                 </div>
                 <Sidebar changeParams={changeParams} animationParams={elementAnimationParams} />

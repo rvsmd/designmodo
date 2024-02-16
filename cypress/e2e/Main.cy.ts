@@ -181,7 +181,7 @@ describe("AnimationElement", () => {
           easing: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
           replay: true,
         }));
-        win.localStorage.setItem('animatedElementId', 'animatedBtn');
+        win.localStorage.setItem('animatedElementId', 'user-animatedBtn');
       },
     });
     cy.getByTestId('preview').click();
