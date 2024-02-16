@@ -1,0 +1,14 @@
+{
+  "include": ["../node_modules/cypress", "*/*.ts"],
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@api/*": ["./src/api/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@models/*": ["./src/models/*"]
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": ["cypress", "cypress-file-upload"]
+  }
+}

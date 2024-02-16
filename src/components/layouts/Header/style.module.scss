@@ -1,0 +1,26 @@
+.header {
+	width: 100%;
+	height: 58px;
+	box-sizing: border-box;
+	padding: 0 11.76px 0 14.7px;
+	background-color: rgb(34, 34, 34);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header__btn {
+	width: 87.23px;
+	height: 34px;
+	background-color: #3E87F8;
+	color: #FFFFFF;
+	border-radius: 5px;
+	border-color: #3E87F8;
+	border-width: 0px;
+	box-shadow: none;
+	font-family: 'Inter';
+	font-weight: 400;
+	font-style: normal;
+	font-size: 14px;
+	cursor: pointer;
+}

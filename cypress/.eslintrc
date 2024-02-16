@@ -1,0 +1,7 @@
+{
+  "plugins": ["no-only-tests", "no-skip-tests"],
+  "rules": {
+    "no-only-tests/no-only-tests": "error",
+    "no-skip-tests/no-skip-tests": "error"
+  }
+}
