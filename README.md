@@ -30,7 +30,7 @@ Prettier - https://prettier.io/
 
 ## Run your tests
 
--    ```
+-   ```
     npm run test:ui:ci
     ```
 
