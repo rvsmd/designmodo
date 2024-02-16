@@ -1,32 +1,43 @@
+# Designmodo
+
+## Technologies used
+
+React - https://reactjs.org/  
+TypeScript - https://www.typescriptlang.org/  
+Sass/Scss - https://sass-lang.com/ 
+Cypress - https://www.cypress.io/  
+ESLint - https://eslint.org/  
+Prettier - https://prettier.io/  
+
 ## Prerequisites
 - Node.js v16.20.0
 - npm v8.19.4
 - Windows, macOS, or Linux operating system
 
-1.  First, let's launch the sample _Designmodo-Siter-io_ app
-    bundled with this project to demo some of its best features:
+## Project setup
 
-    ```Shell
-    npm run setup
+-   ```
+	 npm run setup
     ```
 
-	```Shell
+## Compiles and hot-reloads for development
+
+-	```
     npm run start
     ```
 
-2.  Open [localhost:3000](http://localhost:3000) to see it in action.
+	Open [localhost:3000](http://localhost:3000) to see it in action.
 
-3.  Let's launch cypress to demo tests:
+## Run your tests
 
-	First, to deploy an assembly cypress:
-    ```Shell
+-    ```
     npm run test:ui:ci
     ```
 
-	Secondly, in another terminal tab (Command Prompt):
+	this will launch webpack dev server on port 3001
 
-	 ```Shell
+	```
     npm run cypress:open
     ```
 
-4.  Check in the opened cypress browser.
+	this will open cypress
