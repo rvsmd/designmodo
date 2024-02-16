@@ -1,3 +1,8 @@
+## Prerequisites
+- Node.js v16.20.0
+- npm v8.19.4
+- Windows, macOS, or Linux operating system
+
 1.  First, let's launch the sample _Designmodo-Siter-io_ app
     bundled with this project to demo some of its best features:
 
