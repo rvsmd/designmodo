@@ -152,8 +152,6 @@ const Main = () => {
         return cloneElement;
     };
 
-    const [running, setRunning] = useState('paused');
-
     const checkWrapper = (el: any) => {
         if (!el.id) return false;
         if (!el.id.includes('wrapperToAnimation')) return false;
@@ -285,7 +283,7 @@ const Main = () => {
 
     return (
         <div style={{ backgroundColor: 'rgb(229, 229, 229)', height: '100vh' }}>
-            <Header showPreview={showPreview} initialElement={initialElement} />
+            <Header showPreview={showPreview} />
             <section className={styles['main-section']}>
                 <div className={styles['section-body']}>
                     <div className={styles['section-page']}>
