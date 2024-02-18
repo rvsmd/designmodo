@@ -4,16 +4,16 @@ import Sidebar from '../../layouts/Sidebar';
 import mainImg from '../../../assets/images/main-img.png';
 import AnimationParams from 'src/models/enums/AnimationParamsEnum';
 import { IElementAnimationParams } from 'src/models/IElementAnimationParams';
-// import useInterval from 'src/components/hooks/useInterval';
 import Header from 'src/components/layouts/Header';
 
-/* eslint-disable */
 const Main = () => {
-    const [animatedElements, setAnimatedElements] = useState<{ params: IElementAnimationParams; id: string }[] | []>(() => {
-        if (JSON.parse(localStorage.getItem('animatedElementIds') as string)) {
-            return JSON.parse(localStorage.getItem('animatedElementIds') as string);
-        } else return [];
-    });
+    const [animatedElements, setAnimatedElements] = useState<{ params: IElementAnimationParams; id: string }[] | []>(
+        () => {
+            if (JSON.parse(localStorage.getItem('animatedElementIds') as string)) {
+                return JSON.parse(localStorage.getItem('animatedElementIds') as string);
+            } else return [];
+        },
+    );
 
     const [elementAnimationParams, setElementAnimationParams] = useState<IElementAnimationParams>(() => {
         if (JSON.parse(localStorage.getItem('animationParams') as string)) {
@@ -54,8 +54,8 @@ const Main = () => {
     const [animatedElement, setAnimatedElement] = useState<any>(null);
 
     const saveAnimatedElement = (el: any) => {
-        if (animatedElements.findIndex(item => item.id === el.id) === -1) {
-            setAnimatedElements([...animatedElements, {params: elementAnimationParams, id: el.id}]);
+        if (animatedElements.findIndex((item) => item.id === el.id) === -1) {
+            setAnimatedElements([...animatedElements, { params: elementAnimationParams, id: el.id }]);
         }
     };
 
@@ -165,28 +165,30 @@ const Main = () => {
         el.style.transform =
             `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +
             ` scale(${initialElementAnimationParams.scale})`;
-            el.style.opacity = initialElementAnimationParams.opacity + '%';
-            el.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
+        el.style.opacity = initialElementAnimationParams.opacity + '%';
+        el.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
         if (animatedElement && animatedElement.style.display !== 'none') animatedElement.style.display = 'none';
         el.animate(
             [
                 {
-                    transform: `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +` scale(${initialElementAnimationParams.scale})`,
-                    opacity:  initialElementAnimationParams.opacity + '%',
+                    transform:
+                        `translate(${initialElementAnimationParams.x + 'px'},
+                        ${initialElementAnimationParams.y + 'px'})` + ` scale(${initialElementAnimationParams.scale})`,
+                    opacity: initialElementAnimationParams.opacity + '%',
                     filter: `blur(${initialElementAnimationParams.blur + 'px'})`,
                 },
             ],
             {
-                fill: "forwards",
-            }
-          );
+                fill: 'forwards',
+            },
+        );
     };
 
     const chooseElement = (el: any) => {
         if (!el) return;
         returnElementInitialPosition(el);
-        if (animatedElements.findIndex(item => item.id === el.id) !== -1) {
-            setElementAnimationParams(animatedElements[animatedElements.findIndex(item => item.id === el.id)].params);
+        if (animatedElements.findIndex((item) => item.id === el.id) !== -1) {
+            setElementAnimationParams(animatedElements[animatedElements.findIndex((item) => item.id === el.id)].params);
         }
         const wrapper =
             el !== initialElement || !checkWrapper(el.parentNode) ? createWrapperElements(el) : el.parentNode;
@@ -206,25 +208,27 @@ const Main = () => {
         el.animate(
             [
                 {
-                    transform: `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +` scale(${initialElementAnimationParams.scale})`,
-                    opacity:  initialElementAnimationParams.opacity + '%',
+                    transform:
+                        `translate(${initialElementAnimationParams.x + 'px'},
+                        ${initialElementAnimationParams.y + 'px'})` + ` scale(${initialElementAnimationParams.scale})`,
+                    opacity: initialElementAnimationParams.opacity + '%',
                     filter: `blur(${initialElementAnimationParams.blur + 'px'})`,
                 },
                 {
-                    transform: `translate(${params.x + 'px'}, ${params.y + 'px'})` +` scale(${params.scale})`,
-                    opacity:  params.opacity + '%',
+                    transform: `translate(${params.x + 'px'}, ${params.y + 'px'})` + ` scale(${params.scale})`,
+                    opacity: params.opacity + '%',
                     filter: `blur(${params.blur + 'px'})`,
                 },
             ],
             {
-                fill: "forwards",
+                fill: 'forwards',
                 delay: params.delay * 1000,
                 easing: params.easing,
                 duration: params.speed * 1000,
                 iterations: params.replay ? 'Infinity' : 1,
                 endDelay: params.delay * 1000,
-            }
-          );
+            },
+        );
     };
 
     const startAnimation = (el: any, params: any) => {
@@ -234,21 +238,21 @@ const Main = () => {
 
     const showPreview = () => {
         if (!initialElement || !animatedElements) return;
-        animatedElements.map(item => startAnimation(document.querySelector('#' + item.id), item.params));
+        animatedElements.map((item) => startAnimation(document.querySelector('#' + item.id), item.params));
     };
 
     const saveElementParams = () => {
-        if (animatedElements.find(item => item.id === animatedElement.id)) {
-            const newAnimatedElements = animatedElements.map(item => {
+        if (animatedElements.find((item) => item.id === animatedElement.id)) {
+            const newAnimatedElements = animatedElements.map((item) => {
                 if (item.id !== animatedElement.id) return item;
                 return {
                     params: elementAnimationParams,
                     id: item.id,
-                }
-            })
+                };
+            });
             setAnimatedElements(newAnimatedElements);
         }
-    }
+    };
 
     useEffect(() => {
         saveParams();
@@ -257,7 +261,7 @@ const Main = () => {
             chooseElement(initialElement);
             return;
         }
-        animatedElements.map(item => returnElementInitialPosition(document.querySelector('#' + item.id)));
+        animatedElements.map((item) => returnElementInitialPosition(document.querySelector('#' + item.id)));
         if (animatedElement.style.display === 'none') animatedElement.style.display = 'block';
         animatedElement.style.transition = `transform ${0 + 's'}, opacity ${0 + 's'}, filter ${0 + 's'}`;
         animatedElement.style.transform =
@@ -266,7 +270,6 @@ const Main = () => {
         animatedElement.style.opacity = elementAnimationParams.opacity + '%';
         animatedElement.style.filter = `blur(${elementAnimationParams.blur + 'px'})`;
         saveElementParams();
-
     }, [elementAnimationParams]);
 
     useEffect(() => {
@@ -327,7 +330,11 @@ const Main = () => {
                         />
                     </div>
                 </div>
-                <Sidebar changeParams={changeParams} animationParams={elementAnimationParams} elementId={initialElement ? initialElement.id : ''} />
+                <Sidebar
+                    changeParams={changeParams}
+                    animationParams={elementAnimationParams}
+                    elementId={initialElement ? initialElement.id : ''}
+                />
             </section>
         </div>
     );
