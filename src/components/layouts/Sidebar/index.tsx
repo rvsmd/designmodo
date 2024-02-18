@@ -138,13 +138,7 @@ const Sidebar = (props: BSidebarProps) => {
                 <div className={styles['toggle-container']}>
                     <span style={{ fontSize: 11, fontFamily: 'Inter', fontWeight: 700, marginRight: 10 }}>Replay</span>
                     <label className={styles['switch']} htmlFor='checkbox' data-testid='Sidebar-Replay'>
-                        <input
-                            disabled={replay ? false : true}
-                            type='checkbox'
-                            id='checkbox'
-                            checked={replay}
-                            onChange={() => setReplay(!replay)}
-                        />
+                        <input type='checkbox' id='checkbox' checked={replay} onChange={() => setReplay(!replay)} />
                         <div className={styles['slider']}></div>
                     </label>
                 </div>

@@ -135,6 +135,7 @@ const Main = () => {
 
     const createCloneElement = (el: any) => {
         const cloneElement = el.cloneNode(true);
+        cloneElement.classList.add('clone');
         cloneElement.style.position = 'absolute';
         cloneElement.style.margin = 0;
         cloneElement.style.width = el.style.width;
@@ -150,6 +151,8 @@ const Main = () => {
 
         return cloneElement;
     };
+
+    const [running, setRunning] = useState('paused');
 
     const checkWrapper = (el: any) => {
         if (!el.id) return false;
@@ -167,6 +170,18 @@ const Main = () => {
             el.style.opacity = initialElementAnimationParams.opacity + '%';
             el.style.filter = `blur(${initialElementAnimationParams.blur + 'px'})`;
         if (animatedElement && animatedElement.style.display !== 'none') animatedElement.style.display = 'none';
+        el.animate(
+            [
+                {
+                    transform: `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +` scale(${initialElementAnimationParams.scale})`,
+                    opacity:  initialElementAnimationParams.opacity + '%',
+                    filter: `blur(${initialElementAnimationParams.blur + 'px'})`,
+                },
+            ],
+            {
+                fill: "forwards",
+            }
+          );
     };
 
     const chooseElement = (el: any) => {
@@ -190,60 +205,39 @@ const Main = () => {
     };
 
     const startElementAnimation = (el: any, params: any) => {
-        el.style.transition = `
-			transform ${params.speed + 's'} ${params.easing},
-			opacity ${params.speed + 's'} ${params.easing},
-			filter ${params.speed + 's'} ${params.easing}
-		`;
-        el.style.transform =
-            `translate(${params.x + 'px'}, ${params.y + 'px'})` +
-            ` scale(${params.scale})`;
-            el.style.opacity = params.opacity + '%';
-            el.style.filter = `blur(${params.blur + 'px'})`;
-    };
-
-    const createReplayAnimate = (el: any, params: any) => {
-        const intervalAnim = setInterval(() => {
-            startElementAnimation(el, params);
-        }, params.delay * 1000);
-        const intervalReturnInitialPlace = setInterval(() => {
-            returnElementInitialPosition(el);
-        }, params.delay * 1000 - 100);
+        el.animate(
+            [
+                {
+                    transform: `translate(${initialElementAnimationParams.x + 'px'}, ${initialElementAnimationParams.y + 'px'})` +` scale(${initialElementAnimationParams.scale})`,
+                    opacity:  initialElementAnimationParams.opacity + '%',
+                    filter: `blur(${initialElementAnimationParams.blur + 'px'})`,
+                },
+                {
+                    transform: `translate(${params.x + 'px'}, ${params.y + 'px'})` +` scale(${params.scale})`,
+                    opacity:  params.opacity + '%',
+                    filter: `blur(${params.blur + 'px'})`,
+                },
+            ],
+            {
+                fill: "forwards",
+                delay: params.delay * 1000,
+                easing: params.easing,
+                duration: params.speed * 1000,
+                iterations: params.replay ? 'Infinity' : 1,
+                endDelay: params.delay * 1000,
+            }
+          );
     };
 
     const startAnimation = (el: any, params: any) => {
-        if (!params.replay) {
-            returnElementInitialPosition(el);
-            setTimeout(() => {
-                setTimeout(() => {
-                    startElementAnimation(el, params);
-                }, 100);
-            }, params.delay * 1000);
-        } else {
-            if (!params.delay) return;
-            createReplayAnimate(el, params)
-        }
+        returnElementInitialPosition(el);
+        startElementAnimation(el, params);
     };
 
     const showPreview = () => {
         if (!initialElement) return;
         animatedElements.map(item => startAnimation(document.querySelector('#' + item.id), item.params));
     };
-
-    // useInterval(
-    //     () => {
-    //         // console.log('interval');
-    //         if (!elementAnimationParams.delay) return;
-    //         animatedElements.map(item => startElementAnimation(document.querySelector('#' + item.id), item.params));
-    //         setTimeout(
-    //             () => {
-    //                 returnElementInitialPosition();
-    //             },
-    //             elementAnimationParams.delay * 1000 - 100,
-    //         );
-    //     },
-    //     elementAnimationParams.replay ? elementAnimationParams.delay * 1000 : null,
-    // );
 
     const saveElementParams = () => {
         if (animatedElements.find(item => item.id === animatedElement.id)) {
