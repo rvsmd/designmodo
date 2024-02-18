@@ -237,7 +237,6 @@ const Main = () => {
     };
 
     const showPreview = () => {
-        if (!initialElement || !animatedElements) return;
         animatedElements.map((item) => startAnimation(document.querySelector('#' + item.id), item.params));
     };
 
