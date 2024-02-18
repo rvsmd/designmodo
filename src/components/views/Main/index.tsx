@@ -11,7 +11,7 @@ import Header from 'src/components/layouts/Header';
 const Main = () => {
     const [animatedElements, setAnimatedElements] = useState<{ params: IElementAnimationParams; id: string }[] | []>(() => {
         if (JSON.parse(localStorage.getItem('animatedElementIds') as string)) {
-            return JSON.parse(localStorage.getItem('animatedElementIds') as string);;
+            return JSON.parse(localStorage.getItem('animatedElementIds') as string);
         } else return [];
     });
 
@@ -235,7 +235,8 @@ const Main = () => {
     };
 
     const showPreview = () => {
-        if (!initialElement) return;
+        console.log(animatedElements);
+        if (!initialElement || !animatedElements) return;
         animatedElements.map(item => startAnimation(document.querySelector('#' + item.id), item.params));
     };
 
