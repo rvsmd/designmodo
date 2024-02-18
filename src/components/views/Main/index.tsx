@@ -235,7 +235,6 @@ const Main = () => {
     };
 
     const showPreview = () => {
-        console.log(animatedElements);
         if (!initialElement || !animatedElements) return;
         animatedElements.map(item => startAnimation(document.querySelector('#' + item.id), item.params));
     };

@@ -16,7 +16,6 @@ const Header = (props: HeaderProps) => {
             <button
                 className={styles['header__btn']}
                 data-testId='preview'
-                disabled={initialElement ? false : true}
                 onClick={showPreview}
             >
                 Preview
