@@ -7,12 +7,17 @@ import { IElementAnimationParams } from 'src/models/IElementAnimationParams';
 interface BSidebarProps {
     changeParams: (type: AnimationParams, value: number | boolean | string) => void;
     animationParams: IElementAnimationParams;
+    elementId: string;
 }
 
 const Sidebar = (props: BSidebarProps) => {
-    const { changeParams, animationParams } = props;
+    const { changeParams, animationParams, elementId } = props;
 
     const [replay, setReplay] = useState<boolean>(animationParams.replay);
+
+    useEffect(() => {
+        setReplay(animationParams.replay);
+    }, [animationParams]);
 
     useEffect(() => {
         changeParams(AnimationParams.replay, replay);
@@ -28,6 +33,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={100}
                         step={1}
                         defaultValue={animationParams.x}
+                        idElement={elementId}
                         paramsName='X'
                         valueSymbol=''
                         style={{ width: 118 }}
@@ -41,6 +47,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={100}
                         step={1}
                         defaultValue={animationParams.y}
+                        idElement={elementId}
                         paramsName='Y'
                         valueSymbol=''
                         style={{ width: 118 }}
@@ -53,6 +60,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={100}
                         step={1}
                         defaultValue={animationParams.opacity}
+                        idElement={elementId}
                         paramsName='Opacity'
                         valueSymbol='%'
                         style={{ width: 118 }}
@@ -66,6 +74,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={3}
                         step={0.1}
                         defaultValue={animationParams.scale}
+                        idElement={elementId}
                         paramsName='Scale'
                         valueSymbol=''
                         style={{ width: 118 }}
@@ -79,6 +88,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={20}
                         step={1}
                         defaultValue={animationParams.blur}
+                        idElement={elementId}
                         paramsName='Blur'
                         valueSymbol=''
                         style={{ width: 118 }}
@@ -91,6 +101,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={6}
                         step={0.1}
                         defaultValue={animationParams.speed}
+                        idElement={elementId}
                         paramsName='Speed'
                         valueSymbol='s'
                         style={{ width: 118 }}
@@ -103,6 +114,7 @@ const Sidebar = (props: BSidebarProps) => {
                         max={10}
                         step={0.1}
                         defaultValue={animationParams.delay}
+                        idElement={elementId}
                         paramsName='Delay'
                         valueSymbol='s'
                         style={{ width: 118 }}

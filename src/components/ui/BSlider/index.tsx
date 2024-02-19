@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './style.module.scss';
 
 interface BSliderPropsTypes {
@@ -6,6 +6,7 @@ interface BSliderPropsTypes {
     max: number;
     step: number;
     defaultValue?: number;
+    idElement?: string;
     paramsName: string;
     valueSymbol: string;
     onChange: (value: number) => void;
@@ -19,6 +20,7 @@ const BSlider = (props: BSliderPropsTypes) => {
         max,
         step,
         defaultValue = min,
+        idElement,
         paramsName,
         valueSymbol,
         onChange,
@@ -46,24 +48,35 @@ const BSlider = (props: BSliderPropsTypes) => {
         onChange(value);
     }, [value, min, max]);
 
+    useEffect(() => {
+        setValue(defaultValue);
+    }, [defaultValue]);
+
+    const inputMemo = useMemo(() => {
+        return (
+            <input
+                key={'BSlider-' + paramsName + idElement}
+                type='range'
+                min={min}
+                max={max}
+                step={step}
+                defaultValue={defaultValue}
+                data-testid={'BSlider-' + paramsName}
+                onChange={(e) => setValue(parseFloat(e.target.value))}
+            />
+        );
+    }, [idElement]);
+
+    const spanMemo = useMemo(() => {
+        return <span className={styles['range-selected']} style={{ right: right, left: left }} />;
+    }, [left, right]);
+
     return (
         <div className={styles['slider-container']}>
             <span style={{ fontSize: 11, fontFamily: 'Inter', fontWeight: 700, marginRight: 10 }}>{paramsName}</span>
             <div style={style}>
-                <div className={styles['range-slider']}>
-                    <span className={styles['range-selected']} style={{ right: right, left: left }} />
-                </div>
-                <div className={styles['range-input']}>
-                    <input
-                        type='range'
-                        min={min}
-                        max={max}
-                        step={step}
-                        defaultValue={defaultValue}
-                        data-testid={'BSlider-' + paramsName}
-                        onChange={(e) => setValue(parseFloat(e.target.value))}
-                    />
-                </div>
+                <div className={styles['range-slider']}>{spanMemo}</div>
+                <div className={styles['range-input']}>{inputMemo}</div>
             </div>
             <div className={styles['range-input-value']}>{value + valueSymbol}</div>
         </div>
