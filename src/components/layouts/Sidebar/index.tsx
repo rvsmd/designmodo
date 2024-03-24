@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './style.module.scss';
-import BSlider from 'src/components/ui/BSlider';
+import BRangeSlider from 'src/components/ui/BRangeSlider';
 import AnimationParams from 'src/models/enums/AnimationParamsEnum';
 import { IElementAnimationParams } from 'src/models/IElementAnimationParams';
 
@@ -22,7 +22,7 @@ const Sidebar = (props: BSidebarProps) => {
         <div className={styles['sidebar-container']}>
             <div className={styles['sliders-wrapper']}>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         hasNegativeValue
                         min={-100}
                         max={100}
@@ -35,7 +35,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         hasNegativeValue
                         min={-100}
                         max={100}
@@ -48,7 +48,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         min={0}
                         max={100}
                         step={1}
@@ -60,7 +60,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         hasNegativeValue
                         min={-3}
                         max={3}
@@ -73,7 +73,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         hasNegativeValue
                         min={-20}
                         max={20}
@@ -86,7 +86,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']}>
-                    <BSlider
+                    <BRangeSlider
                         min={0}
                         max={6}
                         step={0.1}
@@ -98,7 +98,7 @@ const Sidebar = (props: BSidebarProps) => {
                     />
                 </div>
                 <div className={styles['slider-container']} style={{ marginTop: 20 }}>
-                    <BSlider
+                    <BRangeSlider
                         min={0}
                         max={10}
                         step={0.1}
